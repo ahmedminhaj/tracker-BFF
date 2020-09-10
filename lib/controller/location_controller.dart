@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:act_tracker/model/location_model.dart';
+import 'package:act_tracker/utils/time_util.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:location/location.dart';
@@ -14,9 +15,7 @@ class LocationController extends GetxController {
   String currentAddress, currentPosition;
   double distance;
   var location = Location();
-  var timeList = [30, 40, 20, 50, 60];
-  var time = 10;
-  
+  var time = 90;
 
   fetchLocation() {
     findLocation();
@@ -31,7 +30,6 @@ class LocationController extends GetxController {
     currentAddress = await getCurrentAddress(currentLocation);
     distance = await getDistance();
     currentPosition = getCurrentPosition(distance);
-    time = timeList[Random().nextInt(timeList.length)];
     if (activityList.length == 0) {
       activityList.add(
         UserLocation(
@@ -39,11 +37,13 @@ class LocationController extends GetxController {
           position: currentPosition,
           distanceFromWork: distance,
           stayTime: time,
+          fetchTime: TimeUtil.getFormattedTime(TimeOfDay.now()),
         ),
       );
     } else if ((activityList[activityList.length - 1].position == currentPosition) &&
         (activityList[activityList.length - 1].address == currentAddress)) {
       activityList[activityList.length - 1].stayTime = activityList[activityList.length - 1].stayTime + time;
+      activityList[activityList.length - 1].fetchTime = TimeUtil.getFormattedTime(TimeOfDay.now());
     } else if ((activityList[activityList.length - 1].position != currentPosition ||
         activityList[activityList.length - 1].address != currentAddress)) {
       activityList.add(
@@ -52,6 +52,7 @@ class LocationController extends GetxController {
           position: currentPosition,
           distanceFromWork: distance,
           stayTime: time,
+          fetchTime: TimeUtil.getFormattedTime(TimeOfDay.now()),
         ),
       );
     }
@@ -88,7 +89,7 @@ class LocationController extends GetxController {
             currentloc.latitude, currentloc.longitude);
 
         geo.Placemark place = p[0];
-        return " ${place.name}, ${place.subLocality}, ${place.locality}";
+        return " ${place.name}, ${place.subLocality}";
       } catch (e) {
         print(e);
       }
@@ -99,9 +100,9 @@ class LocationController extends GetxController {
 
   getCurrentPosition(double distanceFromWrok) {
     if (distanceFromWrok < 10) {
-      return "in work premise";
+      return "In work premise";
     } else {
-      return "out of work premise";
+      return "Out of work premise";
     }
   }
 
@@ -111,6 +112,7 @@ class LocationController extends GetxController {
       value.distanceFromWork = distance;
       value.position = currentPosition;
       value.stayTime = time;
+      value.fetchTime = TimeUtil.getFormattedTime(TimeOfDay.now());
     });
   }
 }

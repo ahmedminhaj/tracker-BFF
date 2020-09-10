@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 5.0,
                       ),
                       Text((_.userLocation.value.position != null) ?
-                        "${_.userLocation.value.position} for last ${_.userLocation.value.stayTime}sec" : "",
+                        "${_.userLocation.value.position}" : "",
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black54,

@@ -8,13 +8,23 @@ import 'package:location/location.dart';
 
 class LocationController extends GetxController {
   final userLocation = UserLocation().obs;
+  var activityList = List<UserLocation>().obs;
 
   geo.Position currentLocation;
   String currentAddress, currentPosition;
   double distance;
   var location = Location();
-  var time = 10;
   var timeList = [30, 40, 20, 50, 60];
+  var time = 10;
+  
+
+  fetchLocation() {
+    findLocation();
+    var timer = Duration(seconds: time);
+    Timer.periodic(timer, (t) {
+      findLocation();
+    });
+  }
 
   findLocation() async {
     currentLocation = await getCurrentLocation();
@@ -22,15 +32,34 @@ class LocationController extends GetxController {
     distance = await getDistance();
     currentPosition = getCurrentPosition(distance);
     time = timeList[Random().nextInt(timeList.length)];
+    if (activityList.length == 0) {
+      activityList.add(
+        UserLocation(
+          address: currentAddress,
+          position: currentPosition,
+          distanceFromWork: distance,
+          stayTime: time,
+        ),
+      );
+    } else if ((activityList[activityList.length - 1].position == currentPosition) &&
+        (activityList[activityList.length - 1].address == currentAddress)) {
+      activityList[activityList.length - 1].stayTime = activityList[activityList.length - 1].stayTime + time;
+    } else if ((activityList[activityList.length - 1].position != currentPosition ||
+        activityList[activityList.length - 1].address != currentAddress)) {
+      activityList.add(
+        UserLocation(
+          address: currentAddress,
+          position: currentPosition,
+          distanceFromWork: distance,
+          stayTime: time,
+        ),
+      );
+    }
     print(time);
     print(distance);
     print(currentAddress);
     print(currentPosition);
-    // updateUserLocation();
-    updateUserAddress();
-    updateUserDistanceFromWork();
-    updateUserPosition();
-    updateUserStayTime();
+    updateUserLocation();
   }
 
   Future<geo.Position> getCurrentLocation() async {
@@ -59,7 +88,7 @@ class LocationController extends GetxController {
             currentloc.latitude, currentloc.longitude);
 
         geo.Placemark place = p[0];
-        return "${place.subLocality}";
+        return " ${place.name}, ${place.subLocality}, ${place.locality}";
       } catch (e) {
         print(e);
       }
@@ -69,7 +98,7 @@ class LocationController extends GetxController {
   }
 
   getCurrentPosition(double distanceFromWrok) {
-    if (distanceFromWrok < 20) {
+    if (distanceFromWrok < 10) {
       return "in work premise";
     } else {
       return "out of work premise";
@@ -78,42 +107,10 @@ class LocationController extends GetxController {
 
   updateUserLocation() {
     userLocation.update((value) {
-      value.currentAddress = currentAddress;
+      value.address = currentAddress;
       value.distanceFromWork = distance;
       value.position = currentPosition;
       value.stayTime = time;
-    });
-  }
-
-  updateUserAddress() {
-    userLocation.update((value) {
-      value.currentAddress = currentAddress;
-    });
-  }
-
-  updateUserStayTime() {
-    userLocation.update((value) {
-      value.stayTime = time;
-    });
-  }
-
-  updateUserDistanceFromWork() {
-    userLocation.update((value) {
-      value.distanceFromWork = distance;
-    });
-  }
-
-  updateUserPosition() {
-    userLocation.update((value) {
-      value.position = currentPosition;
-    });
-  }
-
-  fetchLocation() {
-    findLocation();
-    var timer = Duration(seconds: time);
-    Timer.periodic(timer, (t) {
-      findLocation();
     });
   }
 }

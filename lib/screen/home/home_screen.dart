@@ -5,7 +5,6 @@ import 'package:act_tracker/widgets/appbar/screen_appbar.dart';
 import 'package:act_tracker/widgets/button/route_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -35,14 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (_) {
                   return Column(
                     children: [
-                      Text(
-                        (_.userLocation.value.currentAddress != null)
-                            ? "Now at ${_.userLocation.value.currentAddress}"
-                            : "Turn on GPS to find location",
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w300,
+                      Center(
+                        child: Text(
+                          (_.userLocation.value.address != null)
+                              ? "Now at ${_.userLocation.value.address}"
+                              : "Turn on GPS to find location",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
                       ),
                       SizedBox(

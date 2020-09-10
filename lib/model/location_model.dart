@@ -1,11 +1,11 @@
 class UserLocation {
-  String currentAddress;
+  String address;
   double distanceFromWork;
   String position;
   int stayTime;
   
   UserLocation({
-    this.currentAddress,
+    this.address,
     this.distanceFromWork,
     this.position,
     this.stayTime,

@@ -75,7 +75,6 @@ class LocationController extends GetxController {
     if (currentPos != null) {
       double distanceInMeters = await geo.Geolocator().distanceBetween(
           23.751328, 90.3790379, currentPos.latitude, currentPos.longitude);
-
       return distanceInMeters;
     } else {
       return 0.0;
@@ -99,7 +98,7 @@ class LocationController extends GetxController {
   }
 
   getCurrentPosition(double distanceFromWrok) {
-    if (distanceFromWrok < 10) {
+    if (distanceFromWrok < 20 ) {
       return "In work premise";
     } else {
       return "Out of work premise";

@@ -1,3 +1,4 @@
+import 'package:act_tracker/screen/health/components/health_details.dart';
 import 'package:act_tracker/screen/home/home_screen.dart';
 import 'package:act_tracker/widgets/appbar/screen_appbar.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class HealthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: screenAppbar(context, "Health Info"),
+      body: HealthDetails(),
     );
   }
 }

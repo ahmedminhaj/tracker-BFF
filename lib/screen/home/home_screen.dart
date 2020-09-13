@@ -1,8 +1,10 @@
 import 'package:act_tracker/controller/location_controller.dart';
 import 'package:act_tracker/screen/activity/activity_screen.dart';
 import 'package:act_tracker/screen/health/health_screen.dart';
-import 'package:act_tracker/widgets/appbar/screen_appbar.dart';
-import 'package:act_tracker/widgets/button/route_button.dart';
+import 'package:act_tracker/screen/home/components/user_card.dart';
+import 'package:act_tracker/widgets/card/activity_card.dart';
+import 'package:act_tracker/widgets/card/diet_card.dart';
+import 'package:act_tracker/widgets/card/health_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,69 +24,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: screenAppbar(context, "Zerometry BFF"),
       body: Container(
         color: Colors.white,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GetX<LocationController>(
-                init: LocationController(),
-                builder: (_) {
-                  return Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          (_.userLocation.value.address != null)
-                              ? "Now at ${_.userLocation.value.address}"
-                              : "Turn on GPS to find location",
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Text((_.userLocation.value.position != null) ?
-                        "${_.userLocation.value.position}" : "",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              RouteButton(
-                buttonTitle: "Activity log",
-                routeLink: () {
-                  Get.to(
-                    ActivityScreen(),
-                  );
-                },
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              RouteButton(
-                buttonTitle: "Health Details",
-                routeLink: () {
-                  Get.to(
-                    HealthScreen(),
-                  );
-                },
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            UserCard(),
+            GetX<LocationController>(
+              init: LocationController(),
+              builder: (_) {
+                return (_.userLocation.value.address != null)
+                    ? ActivityCard(
+                        currentLocation: _.userLocation.value.address,
+                        currentposition:
+                            (_.userLocation.value.distanceFromWork < 20)
+                                ? "in work premise"
+                                : "out of work premise",
+                        seemoreLink: () {
+                          Get.to(ActivityScreen());
+                        },
+                      )
+                    : ActivityCard(
+                        currentLocation: null,
+                        currentposition: null,
+                        seemoreLink: () {
+                          Get.to(ActivityScreen());
+                        },
+                      );
+              },
+            ),
+            HealthInfoCard(
+              seeDetailsLink: () {
+                Get.to(HealthScreen());
+              },
+            ),
+            DietCard(),
+          ],
         ),
       ),
     );

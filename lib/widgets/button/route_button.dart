@@ -1,3 +1,4 @@
+import 'package:act_tracker/style/style_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -9,15 +10,16 @@ class RouteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(5),
+        color: StyleColor.buttonColor,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             offset: Offset(0, 0),
-            blurRadius: 10,
-            color: Colors.grey[600],
+            blurRadius: 5,
+            color: StyleColor.shadowColor,
           ),
         ],
       ),
@@ -27,7 +29,7 @@ class RouteButton extends StatelessWidget {
           buttonTitle,
           style: GoogleFonts.roboto(
             fontSize: 18,
-            color: Colors.white70,
+            color: StyleColor.buttonTextColor,
             fontWeight: FontWeight.w500,
           ),
         ),

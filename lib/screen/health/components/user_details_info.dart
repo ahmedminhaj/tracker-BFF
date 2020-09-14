@@ -43,10 +43,10 @@ class UserDetailsInfo extends StatelessWidget {
         SizedBox(
           height: 8,
         ),
-        SubTitle(
-          title: "Age: 29",
-          size: StyleSize.subTitleSize,
-        ),
+        // SubTitle(
+        //   title: "29",
+        //   size: StyleSize.subTitleSize,
+        // ),
       ],
     );
   }
